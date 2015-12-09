@@ -4,7 +4,6 @@ advent of code
 """
 
 import sys
-import numpy
 import re
 
 # day 6: probably a fire hazard
