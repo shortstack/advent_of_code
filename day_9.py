@@ -10,7 +10,7 @@ from itertools import izip, islice
 
 # day 9: all in a single night
 
-def day9part1():
+def day9(option):
 
 	distances = {}
 
@@ -38,6 +38,10 @@ def day9part1():
 		distances[route] = distance
 
 	# find shortest total distance in dictionary
-  	return distances[min(distances, key=distances.get)]
+	if option == "min":
+  		return distances[min(distances, key=distances.get)]
+	else:
+  		return distances[max(distances, key=distances.get)]
 
-print(day9part1())
+print(day9("min"))
+print(day9("max"))

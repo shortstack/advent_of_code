@@ -6,6 +6,8 @@ advent of code
 import sys
 import re
 import hashlib
+import itertools
+from itertools import izip, islice
 
 # day 1: not quite lisp
 
@@ -456,6 +458,41 @@ def day8part2():
 
 	return new_count
 
+# day 9: all in a single night
+
+def day9(option):
+
+	distances = {}
+
+	# get all possible routes
+	locations = ["Arbre","Tambi","Norrath","Tristram","Straylight","Faerun","AlphaCentauri","Snowdin"]
+	routes = list(itertools.permutations(locations))
+
+	# iterate through routes to search for distance
+	for route in routes:
+
+		distance = 0
+
+		# get hop and next hop
+		for hop, nextHop in izip(route, islice(route, 1, None)):
+
+			# read through file and find distance for that connection
+			with open('day_9') as file:
+				for num, line in enumerate(file, 1):
+					if hop in line and nextHop in line:
+
+						# add distance to total route distance
+						distance += int(line.split(" = ")[1].strip())
+
+		# add distance with route to dictionary
+		distances[route] = distance
+
+	# find shortest total distance in dictionary
+	if option == "min":
+  		return distances[min(distances, key=distances.get)]
+	else:
+  		return distances[max(distances, key=distances.get)]
+
 print(day1part1())
 print(day1part2())
 print(day2part1())
@@ -470,3 +507,5 @@ print(day6part1())
 print(day6part2())
 print(day8part1())
 print(day8part2())
+print(day9("min"))
+print(day9("max"))
