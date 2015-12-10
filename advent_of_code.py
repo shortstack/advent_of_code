@@ -7,7 +7,7 @@ import sys
 import re
 import hashlib
 import itertools
-from itertools import izip, islice
+from itertools import izip, islice, groupby
 
 # day 1: not quite lisp
 
@@ -493,6 +493,22 @@ def day9(option):
 	else:
   		return distances[max(distances, key=distances.get)]
 
+# day 10: elves look, elves say
+
+def day10(repeat):
+
+    input = "1321131112"
+
+    for i in range(repeat):
+
+        new_input = ""
+        for num, count in groupby(input):
+            new_input += str(len(list(count))) + str(num)
+
+        input = new_input
+
+    return len(input)
+
 print(day1part1())
 print(day1part2())
 print(day2part1())
@@ -509,3 +525,5 @@ print(day8part1())
 print(day8part2())
 print(day9("min"))
 print(day9("max"))
+print(day10(40))
+print(day10(50))
