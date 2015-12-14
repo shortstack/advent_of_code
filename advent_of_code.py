@@ -7,7 +7,8 @@ import sys
 import re
 import hashlib
 import itertools
-from itertools import izip, islice, groupby
+import json
+from itertools import izip, tee, chain, islice, groupby
 
 # day 1: not quite lisp
 
@@ -425,6 +426,54 @@ def day6part2():
 
 	return lit
 
+# day 7: some assembly required
+
+def day7(day):
+
+	circuit = {}
+
+	# open file and get lines
+	instructions = open("day_07", "r").read().splitlines()
+
+	# split up values
+	for line in instructions:
+		command, gate = line.split(" -> ")
+		circuit[gate.strip()] = command
+
+	@functools.lru_cache()
+	def calc(gate):
+
+		# if already a number, return
+		try:
+			return int(gate)
+		except ValueError:
+			pass
+
+		# otherwise, split up operation
+		command = circuit[gate].split(" ")
+
+		# get command, apply operation
+		if "NOT" in command:
+			return ~calc(command[1])
+		if "AND" in command:
+			return calc(command[0]) & calc(command[2])
+		elif "OR" in command:
+			return calc(command[0]) | calc(command[2])
+		elif "LSHIFT" in command:
+			return calc(command[0]) << calc(command[2])
+		elif "RSHIFT" in command:
+			return calc(command[0]) >> calc(command[2])
+		else:
+			return calc(command[0])
+
+	if day is 1:
+		calc.cache_clear()
+		return calc("a")
+	else:
+		circuit["b"] = str(calc("a"))
+		calc.cache_clear()
+		return calc("a")
+
 # day 8: matchsticks
 
 def day8part1():
@@ -550,6 +599,94 @@ def day11(input):
 
     return input
 
+# day 12: JSAbacusFramework.io
+
+def day12(day):
+
+    file = open('day_12','r').read()
+
+    # get all the numbers from the file
+    numbers = re.findall(r'-?[0-9]+', file)
+
+    # convert strings to ints
+    int_numbers = [int(numeric_string) for numeric_string in numbers]
+
+    # get all {} objects without "red" from the file
+    def is_red(object):
+        if "red" in object.values():
+            return {}
+        else:
+            return object
+    objects = str(json.loads(file, object_hook=is_red))
+
+    if day is 2:
+        # return sum of objects not containing 'red':
+        return sum(map(int, re.findall("-?[0-9]+", objects)))
+    # else return total sum
+    return sum(int_numbers)
+
+# day 13: knights of the dinner table
+
+def day13(day):
+
+    total_happiness = {}
+
+    # func to get previous and next values in list of attendees
+    def previous_and_next(seating):
+        prevs, items, nexts = tee(seating, 3)
+        prevs = chain([None], prevs)
+        nexts = chain(islice(nexts, 1, None), [None])
+        return izip(prevs, items, nexts)
+
+    if day is 1:
+        # open the file
+        the_list = open('day_13', 'r').read().splitlines()
+
+        # get all possible names
+        names = ["Alice","Bob","Carol","David","Eric","Frank","George","Mallory"]
+    else:
+        # open the file
+        the_list = open('day_13_whitney', 'r').read().splitlines()
+
+        # get all possible names
+        names = ["Alice","Bob","Carol","David","Eric","Frank","George","Mallory","Whitney"]
+
+    # get all possible seating arrangements
+    arrangements = list(itertools.permutations(names))
+
+    # iterate through routes to search for distance
+    for seating in arrangements:
+
+        happiness = 0
+
+        # get left and right
+        for left, person, right in previous_and_next(seating):
+
+            # if at end of seating list, loop around
+            if str(left) == "None":
+                left = seating[len(seating)-1]
+            if str(right) == "None":
+                right = seating[0]
+
+            # read through file and find happiness for each seating arrangement
+            for line in the_list:
+
+                # only check happiness for that person
+                if line.split(" ")[0] == person:
+                    if left in line or right in line:
+
+                        # add happiness to total happiness
+                        operation = line.split(" ")[2]
+                        if operation == "gain":
+                          happiness += int(line.split(" ")[3])
+                        else:
+                          happiness -= int(line.split(" ")[3])
+
+            # add happiness to dictionary
+            total_happiness[seating] = happiness
+
+    return total_happiness[max(total_happiness, key=total_happiness.get)]
+
 print(day1part1())
 print(day1part2())
 print(day2part1())
@@ -562,6 +699,8 @@ print(day5part1())
 print(day5part2())
 print(day6part1())
 print(day6part2())
+print(day7(1))
+print(day7(2))
 print(day8part1())
 print(day8part2())
 print(day9("min"))
@@ -570,3 +709,7 @@ print(day10(40))
 print(day10(50))
 print(day11("hepxcrrq"))
 print(day11(day11("hepxcrrq")))
+print(day12(1))
+print(day12(2))
+print(day13(1))
+print(day13(2))
