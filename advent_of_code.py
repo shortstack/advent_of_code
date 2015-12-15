@@ -14,7 +14,7 @@ from itertools import izip, tee, chain, islice, groupby
 # day 1: not quite lisp
 
 def day1part1():
-	f = open('day_1', 'r')
+	f = open('day_01', 'r')
 	count = 0
 	while True:
 		ch = f.read(1)
@@ -27,7 +27,7 @@ def day1part1():
 	return str(count)
 
 def day1part2():
-	f = open('day_1', 'r')
+	f = open('day_01', 'r')
 	count = 0
 	position = 0
 	while True:
@@ -47,7 +47,7 @@ def day2part1():
 
 	total = 0
 
-	with open('day_2') as f:
+	with open('day_02') as f:
 	    for line in f:
 
 			# get dimensions
@@ -75,7 +75,7 @@ def day2part2():
 
 	total = 0
 
-	with open('day_2') as f:
+	with open('day_02') as f:
 	    for line in f:
 
 			# get dimensions
@@ -111,7 +111,7 @@ def day3part1():
 	houses = []
 	houses.append((0,0))
 
-	f = open('day_3', 'r')
+	f = open('day_03', 'r')
 	while True:
 		ch = f.read(1)
 
@@ -152,7 +152,7 @@ def day3part2():
 	# counter
 	count = 0
 
-	f = open('day_3', 'r')
+	f = open('day_03', 'r')
 	while True:
 		ch = f.read(1)
 
@@ -262,7 +262,7 @@ def day5part1():
 	vowels = set("AEIOUaeiou")
 	bad_strings = ("ab", "cd", "pq", "xy")
 
-	with open('day_5') as f:
+	with open('day_05') as f:
 	    for line in f:
 
 			nice = True
@@ -291,7 +291,7 @@ def day5part2():
 
 	total = 0
 
-	with open('day_5') as f:
+	with open('day_05') as f:
 	    for line in f:
 
 			test_one = False
@@ -335,7 +335,7 @@ def day6part1():
 
 	lights = [[False]*1000 for i in range(1000)]
 
-	with open('day_6') as f:
+	with open('day_06') as f:
 	    for line in f:
 
 			# get directions
@@ -385,7 +385,7 @@ def day6part2():
 
 	lights = [[0]*1000 for i in range(1000)]
 
-	with open('day_6') as f:
+	with open('day_06') as f:
 	    for line in f:
 
 			# get directions
@@ -482,7 +482,7 @@ def day8part1():
 	literal_count = 0
 	mem_count = 0
 
-	with open('day_8') as f:
+	with open('day_08') as f:
 		for line in f:
 
 			# number of characters of code for string literals
@@ -497,7 +497,7 @@ def day8part2():
 
 	new_count = 0
 
-	with open('day_8') as f:
+	with open('day_08') as f:
 		for line in f:
 
 			# get difference in escape count
@@ -527,7 +527,7 @@ def day9(option):
 		for hop, nextHop in izip(route, islice(route, 1, None)):
 
 			# read through file and find distance for that connection
-			with open('day_9') as file:
+			with open('day_09') as file:
 				for num, line in enumerate(file, 1):
 					if hop in line and nextHop in line:
 
