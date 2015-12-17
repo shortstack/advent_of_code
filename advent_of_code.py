@@ -763,6 +763,139 @@ def day14part2(seconds):
 
     return points
 
+# day 15: science for hungry people
+
+def day15(day):
+
+    ingredients = []
+
+    file = open('day_15','r').read().splitlines()
+    for line in file:
+        # get ingredient and properties
+        ingredients.append(map(int,re.findall(r'-?[0-9]+', line)))
+
+    scores = []
+    score = 0
+    total = 0
+
+    for x in range(0,100):
+        for y in range(0,100-x):
+            for z in range(0,100-x-y):
+
+                # must add up to 100
+                r = 100 - x - y - z
+
+                # get values for all properties
+                capacity = ingredients[0][0]*x + ingredients[1][0]*y + ingredients[2][0]*z + ingredients[3][0]*r
+                durability = ingredients[0][1]*x + ingredients[1][1]*y + ingredients[2][1]*z + ingredients[3][1]*r
+                flavor = ingredients[0][2]*x + ingredients[1][2]*y + ingredients[2][2]*z + ingredients[3][2]*r
+                texture = ingredients[0][3]*x + ingredients[1][3]*y + ingredients[2][3]*z + ingredients[3][3]*r
+                calories = ingredients[0][4]*x + ingredients[1][4]*y + ingredients[2][4]*z + ingredients[3][4]*r
+
+                if day is 1:
+                    # calculate score
+                    if (capacity <= 0 or durability <= 0 or flavor <= 0 or texture <= 0):
+                        score = 0
+                    else:
+                        score = capacity * durability * flavor * texture
+                else:
+
+                    if calories == 500:
+                        # calculate score
+                        if (capacity <= 0 or durability <= 0 or flavor <= 0 or texture <= 0):
+                            score = 0
+                        else:
+                            score = capacity * durability * flavor * texture
+
+                # add scores to array of scores
+                scores.append(score)
+
+    # get highest score
+    return max(scores)
+
+# day 16: aunt sue
+
+def day16(day):
+
+    sues = []
+    clues = (('children', 3), ('cats', 7), ('samoyeds', 2), ('pomeranians', 3), ('akitas', 0), ('vizslas', 0), ('goldfish', 5), ('trees', 3), ('cars', 2), ('perfumes', 1))
+
+    file = open('day_16','r').read().splitlines()
+    for line in file:
+
+        # get all of sue's items
+        sue = line.split(" ")
+        sue = (sue[1][0:-1], (sue[2][0:-1],int(sue[3][0:-1])), (sue[4][0:-1],int(sue[5][0:-1])), (sue[6][0:-1],int(sue[7])))
+        sues.append(sue)
+
+        # skip first array value, just sue's ID number
+        itersue = iter(sue)
+        next(itersue)
+
+        # iterate through list of sue's items and the clues
+        match = 0
+        for s in itersue:
+            for clue in clues:
+                sue_item = s[0]
+                sue_count = s[1]
+                clue_item = clue[0]
+                clue_count = clue[1]
+
+                # find items that match clues
+                if day is 2:
+                    if clue_item == "cats" or clue_item == "trees":
+                        if sue_item == clue_item and sue_count > clue_count:
+                            match += 1
+                    elif clue_item == "pomeranians" or clue_item == "goldfish":
+                        if sue_item == clue_item and sue_count < clue_count:
+                            match += 1
+                    else:
+                        if sue_item == clue_item and sue_count == clue_count:
+                            match += 1
+                else:
+                    if sue_item == clue_item and sue_count == clue_count:
+                        match += 1
+
+        # if all 3 match, that's sue
+        if match is 3:
+            return sue
+
+# day 17: no such thing as too much
+
+def day17(day):
+
+    containers = []
+    combinations = []
+    combinations_min = []
+
+    file = open('day_17','r').read().splitlines()
+    for line in file:
+
+        # get all numbers from puzzle input into array
+        containers.append(int(line))
+
+    # iterate through list, find all combinations that sum 150
+    count = 0
+    for i in range(0, len(containers)+1):
+        for subset in itertools.combinations(containers, i):
+            if sum(subset) is 150:
+
+                combinations.append(subset)
+
+    # get length of new list
+    if day is 1:
+        return len(combinations)
+    else:
+        # iterate through list, find all 4 number combinations that sum 150
+        count = 0
+        for i in range(0, len(containers)+1):
+            for subset in itertools.combinations(containers, i):
+                if sum(subset) is 150 and len(subset) is 4:
+
+                    combinations_min.append(subset)
+
+        return len(combinations_min)
+
 print(day1part1())
 print(day1part2())
 print(day2part1())
@@ -791,3 +924,9 @@ print(day13(1))
 print(day13(2))
 print(day14part1(2503))
 print(day14part2(2503))
+print(day15(1))
+print(day15(2))
+print(day16(1))
+print(day16(2))
+print(day17(1))
+print(day17(2))
