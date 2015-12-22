@@ -35,5 +35,5 @@ def day20part2():
 		if houses[elf] >= num:
 			return elf
 
-#print(day20part1())
+print(day20part1())
 print(day20part2())
